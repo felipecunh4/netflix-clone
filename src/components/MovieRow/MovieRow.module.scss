@@ -1,8 +1,49 @@
 .container {
   margin-bottom: 30px;
 
+  &:hover {
+    .back, .ahead {
+      opacity: 1;
+    }
+  }
+
   .title {
     margin: 0 0 0 30px;
+  }
+
+  .back, .ahead {
+    position: absolute;
+    width: 40px;
+    height: 300px;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 99;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    transition: all 0.3s ease;
+    border: 0;
+    padding: 0;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: 0;
+    }
+  }
+
+  .back {
+    left: 0;
+    .arrowLeft {
+      transform: rotate(180deg);
+    }
+  }
+
+  .ahead {
+    right: 0;
   }
 
   .listContainer {
@@ -10,6 +51,7 @@
     padding-left: 30px;
 
     .list {
+      transition: all 0.4s ease;
 
       .item {
         display: inline-block;

@@ -24,32 +24,33 @@ const HighlightMovie = (props: IHighlightMovieProps) => {
         />
       </div>
       <div className={scss.verticalShadow}>
-        <div className={scss.horizontalShadow}>
-          <h2 className={scss.title}>{props.movie.original_name}</h2>
-          <div className={scss.info}>
-            <div className={scss.points}>{props.movie.vote_average} pontos</div>
-            <div className={scss.date}>{dateAired.getFullYear()}</div>
-            <div className={scss.seasons}>
-              {props.movie.number_of_seasons} temporada
-              <span>{props.movie.number_of_seasons !== 1 && 's'}</span>
-            </div>
+        <div className={scss.horizontalShadow} />
+      </div>
+      <div className={scss.content}>
+        <h2 className={scss.title}>{props.movie.original_name}</h2>
+        <div className={scss.info}>
+          <div className={scss.points}>{props.movie.vote_average} pontos</div>
+          <div className={scss.date}>{dateAired.getFullYear()}</div>
+          <div className={scss.seasons}>
+            {props.movie.number_of_seasons} temporada
+            <span>{props.movie.number_of_seasons !== 1 && 's'}</span>
           </div>
+        </div>
 
-          <div className={scss.description}>{props.movie.overview}</div>
+        <div className={scss.description}>{props.movie.overview}</div>
 
-          <div className={scss.buttonsWrapper}>
-            <a href={`/watch/${props.movie.id}`} className={scss.watch}>
-              ► Assistir
-            </a>
-            <a href={`/list/add/${props.movie.id}`} className={scss.addToList}>
-              + Minha Lista
-            </a>
-          </div>
+        <div className={scss.buttonsWrapper}>
+          <a href={`/watch/${props.movie.id}`} className={scss.watch}>
+            ► Assistir
+          </a>
+          <a href={`/list/add/${props.movie.id}`} className={scss.addToList}>
+            + Minha Lista
+          </a>
+        </div>
 
-          <div className={scss.genres}>
-            <strong>Generos: </strong>
-            {renderGenres()}
-          </div>
+        <div className={scss.genres}>
+          <strong>Generos: </strong>
+          {renderGenres()}
         </div>
       </div>
     </section>

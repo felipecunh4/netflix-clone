@@ -9,6 +9,7 @@ import MovieRow from '../components/MovieRow/MovieRow';
 import HighlightMovie from '../components/HighlightMovie/HighlightMovie';
 
 import scss from './index.module.scss';
+import Loading from '../components/Loading/Loading';
 
 export default function Home() {
   const [movieList, setMovieList] = useState<IMovieList[]>([]);
@@ -56,6 +57,7 @@ export default function Home() {
   return (
     <div className={scss.container}>
       <Header bgBlack={bgHeader} />
+      {movieList.length <= 0 && <Loading />}
       {highlightData && <HighlightMovie movie={highlightData} />}
       <section className={scss.lists}>{renderMovieList()}</section>
       <Footer />
