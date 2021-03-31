@@ -1,5 +1,7 @@
+@import 'src/styles/breakpoints.scss';
+
 .container {
-  height: 100vh;
+  height: 90vh;
   position: relative;
 
   .img {
@@ -39,11 +41,11 @@
 
     .title {
       font-weight: bold;
-      font-size: 6rem;
+      font-size: 4rem;
     }
 
     .info {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: bold;
       margin-top: 15px;
 
@@ -58,10 +60,10 @@
     }
 
     .description {
-      margin-top: 15px;
-      font-size: 2rem;
+      margin: 15px 30px 0 0;
+      font-size: 1.4rem;
       color: #999;
-      max-width: 40%;
+      max-width: 100%;
     }
 
     .buttonsWrapper {
@@ -69,7 +71,7 @@
 
       .watch, .addToList {
         display: inline-block;
-        font-size: 2rem;
+        font-size: 1.6rem;
         font-weight: bold;
         padding: 12px 25px;
         border-radius: 5px;
@@ -96,10 +98,42 @@
 
     .genres {
       margin-top: 15px;
-      font-size: 1.8rem;
+      font-size: 1.4rem;
       color: #999;
     }
   }
+}
 
+@include from600 {
+  .container {
+    height: 100vh;
 
+    .content {
+      .title {
+        font-size: 6rem;
+      }
+
+      .info {
+        font-size: 1.8rem;
+      }
+
+      .description {
+        max-width: 40%;
+        font-size: 2rem;
+        margin: 15px 0 0 0;
+      }
+
+      .buttonsWrapper {
+        .watch, .addToList {
+          font-size: 2rem;
+        }
+
+      }
+
+      .genres {
+        font-size: 1.8rem;
+      }
+    }
+
+  }
 }

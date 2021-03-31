@@ -1,3 +1,5 @@
+@import 'src/styles/breakpoints.scss';
+
 .container {
   margin-bottom: 30px;
 
@@ -21,7 +23,7 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    opacity: 0;
+    opacity: 1;
     transition: all 0.3s ease;
     border: 0;
     padding: 0;
@@ -68,6 +70,14 @@
           }
         }
       }
+    }
+  }
+}
+
+@include from600 {
+  .container {
+    .back, .ahead {
+      opacity: 0;
     }
   }
 }

@@ -8,7 +8,7 @@ import scss from './MovieRow.module.scss';
 import Arrow from './images/arrow.svg';
 
 const MovieRow = (props: IMovieRowProps) => {
-  const [scrollX, setScrollX] = useState(-400);
+  const [scrollX, setScrollX] = useState(0);
 
   const handleLeftArrow = () => {
     let x = scrollX + Math.round(window.innerWidth / 2);

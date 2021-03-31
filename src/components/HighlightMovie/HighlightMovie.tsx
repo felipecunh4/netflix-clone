@@ -6,6 +6,11 @@ import scss from './HighlightMovie.module.scss';
 
 const HighlightMovie = (props: IHighlightMovieProps) => {
   const dateAired = new Date(props.movie.first_air_date);
+  let description = props.movie.overview;
+  description =
+    description.length > 200
+      ? description.substring(0, 200) + '...'
+      : description;
 
   const renderGenres = () => {
     const movie = props.movie;

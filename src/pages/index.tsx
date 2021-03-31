@@ -27,11 +27,9 @@ export default function Home() {
       );
       const highlight = originals[0].items[randomOriginal];
       const highlightInfo = await getMovie(highlight.id, 'tv');
-      console.log(highlightInfo);
       setHighlightData(highlightInfo);
     };
 
-    console.log('passou aqui');
     loadAll();
   }, []);
 
