@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import { getHomeList, getMovie } from '../services/data';
 import { IMovieList, TMovieInfo } from '../services/types';
 
+import Header from '../components/Header/Header';
+import Footer from '../components/Footer/Footer';
 import MovieRow from '../components/MovieRow/MovieRow';
 import HighlightMovie from '../components/HighlightMovie/HighlightMovie';
 
@@ -11,6 +13,7 @@ import scss from './index.module.scss';
 export default function Home() {
   const [movieList, setMovieList] = useState<IMovieList[]>([]);
   const [highlightData, setHighlightData] = useState<TMovieInfo | null>(null);
+  const [bgHeader, setBgHeader] = useState(false);
 
   useEffect(() => {
     const loadAll = async () => {
@@ -31,13 +34,31 @@ export default function Home() {
     loadAll();
   }, []);
 
+  useEffect(() => {
+    const scrollListener = () => {
+      if (window.scrollY > 10) {
+        setBgHeader(true);
+      } else {
+        setBgHeader(false);
+      }
+    };
+
+    window.addEventListener('scroll', scrollListener);
+
+    return () => {
+      window.removeEventListener('scroll', scrollListener);
+    };
+  }, []);
+
   const renderMovieList = () =>
     movieList.map((movie) => <MovieRow key={movie.id} movieCategory={movie} />);
 
   return (
     <div className={scss.container}>
+      <Header bgBlack={bgHeader} />
       {highlightData && <HighlightMovie movie={highlightData} />}
       <section className={scss.lists}>{renderMovieList()}</section>
+      <Footer />
     </div>
   );
 }
