@@ -1,17 +1,33 @@
 import { useEffect, useState } from 'react';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { END } from 'redux-saga';
 
+import { SagaStore, wrapper } from '../store';
+import { RootState } from '../interfaces/rootState';
 import { getHomeList, getMovie } from '../services/data';
 import { IMovieList, TMovieInfo } from '../services/types';
 
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import Loading from '../components/Loading/Loading';
 import MovieRow from '../components/MovieRow/MovieRow';
 import HighlightMovie from '../components/HighlightMovie/HighlightMovie';
 
 import scss from './index.module.scss';
-import Loading from '../components/Loading/Loading';
+import { MoviesActions } from '../store/ducks/movies/actions/actions';
 
-export default function Home() {
+const useRootStore = () =>
+  useSelector(
+    (state: RootState) => ({
+      movies: state.movies.movies,
+    }),
+    shallowEqual
+  );
+
+const Home = () => {
+  const store = useRootStore();
+  const dispatch = useDispatch();
+
   const [movieList, setMovieList] = useState<IMovieList[]>([]);
   const [highlightData, setHighlightData] = useState<TMovieInfo | null>(null);
   const [bgHeader, setBgHeader] = useState(false);
@@ -61,4 +77,15 @@ export default function Home() {
       <Footer />
     </div>
   );
-}
+};
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async ({ store }) => {
+    store.dispatch(MoviesActions.listMovies.request({ genre: 'originals' }));
+
+    store.dispatch(END);
+    await (store as SagaStore).sagaTask?.toPromise();
+  }
+);
+
+export default Home;

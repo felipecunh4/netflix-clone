@@ -42,7 +42,7 @@ const HighlightMovie = (props: IHighlightMovieProps) => {
           </div>
         </div>
 
-        <div className={scss.description}>{props.movie.overview}</div>
+        <div className={scss.description}>{description}</div>
 
         <div className={scss.buttonsWrapper}>
           <a href={`/watch/${props.movie.id}`} className={scss.watch}>

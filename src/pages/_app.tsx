@@ -1,4 +1,5 @@
 import { AppProps } from 'next/app';
+import { wrapper } from '../store';
 import '../styles/global.scss';
 
 function App({ Component, pageProps }: AppProps) {
@@ -9,4 +10,4 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 
-export default App;
+export default wrapper.withRedux(App);
