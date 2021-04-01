@@ -6,8 +6,8 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { EMovieTypes } from './types';
 import { SagaStore, wrapper } from '../store';
 import { RootState } from '../interfaces/rootState';
-import { EMovieKindRequest } from '../store/ducks/movies/types';
 import { MoviesActions } from '../store/ducks/movies/actions/actions';
+import { EMoviePlatform } from '../store/ducks/movies/actions/types';
 
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
@@ -16,7 +16,6 @@ import MovieRow from '../components/MovieRow/MovieRow';
 import HighlightMovie from '../components/HighlightMovie/HighlightMovie';
 
 import scss from './index.module.scss';
-import { EMoviePlatform } from '../store/ducks/movies/actions/types';
 
 const useRootStore = () =>
   useSelector(
@@ -85,6 +84,26 @@ const Home = () => {
           movieCategory={EMovieTypes.TOP_RATED}
           items={store.topRated.items}
         />
+        <MovieRow
+          movieCategory={EMovieTypes.ACTION}
+          items={store.genres.action}
+        />
+        <MovieRow
+          movieCategory={EMovieTypes.COMEDY}
+          items={store.genres.comedy}
+        />
+        <MovieRow
+          movieCategory={EMovieTypes.HORROR}
+          items={store.genres.horror}
+        />
+        <MovieRow
+          movieCategory={EMovieTypes.ROMANCE}
+          items={store.genres.romance}
+        />
+        <MovieRow
+          movieCategory={EMovieTypes.DOCUMENTARY}
+          items={store.genres.documentary}
+        />
       </section>
       <Footer />
     </div>
@@ -96,11 +115,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     store.dispatch(MoviesActions.listOriginalsMovies.request());
     store.dispatch(MoviesActions.listTrendingMovies.request());
     store.dispatch(MoviesActions.listTopRatedMovies.request());
-    store.dispatch(
-      MoviesActions.listGenresMovies.request({
-        genre: EMovieKindRequest.GENRES,
-      })
-    );
+    store.dispatch(MoviesActions.listGenresMovies.request());
 
     store.dispatch(END);
     await (store as SagaStore).sagaTask?.toPromise();

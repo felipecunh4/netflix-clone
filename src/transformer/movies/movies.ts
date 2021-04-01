@@ -68,4 +68,8 @@ export class MoviesTransformer {
       throw new Error('Transformer failed to parse `TMovieInfoRest` error.');
     }
   }
+
+  static ApiListMovieGenreToApp(movies: IMovieApiRest): TMoviePreview[] {
+    return movies.results.map((movie) => this.ApiToApp(movie));
+  }
 }

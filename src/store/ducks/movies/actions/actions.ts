@@ -3,8 +3,8 @@ import { MoviesTypes } from '../types';
 import {
   IFindMovieInfoRequestAction,
   IFindMovieInfoSuccessAction,
-  IListMoviesRequestAction,
   IListMoviesSuccessAction,
+  IListGenreMoviesSuccessAction,
 } from './types';
 
 export class MoviesActions {
@@ -36,13 +36,10 @@ export class MoviesActions {
   )();
 
   static readonly listGenresMovies = createAsyncAction(
-    [
-      MoviesTypes.LIST_GENRES_MOVIES_REQUEST,
-      (res: IListMoviesRequestAction) => res,
-    ],
+    MoviesTypes.LIST_GENRES_MOVIES_REQUEST,
     [
       MoviesTypes.LIST_GENRES_MOVIES_SUCCESS,
-      (res: IListMoviesSuccessAction) => res,
+      (res: IListGenreMoviesSuccessAction) => res,
     ],
     MoviesTypes.LIST_GENRES_MOVIES_FAILURE
   )();

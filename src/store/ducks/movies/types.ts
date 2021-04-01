@@ -21,8 +21,9 @@ export enum MoviesTypes {
 }
 
 export enum EMovieKindRequest {
-  ORIGINALS = 'originals',
-  TRENDING = 'trending',
-  TOP_RATED = 'toprated',
-  GENRES = 'genres',
+  ACTION = 28,
+  COMEDY = 35,
+  HORROR = 27,
+  ROMANCE = 10749,
+  DOCUMENTARY = 99,
 }

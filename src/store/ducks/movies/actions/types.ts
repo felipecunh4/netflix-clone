@@ -1,17 +1,19 @@
-import { EMovieKindRequest } from '../types';
-
 export type TMoviePreview = {
   id: number;
   title: string;
   poster: string;
 };
 
-export interface IListMoviesRequestAction {
-  genre: EMovieKindRequest;
-}
-
 export interface IListMoviesSuccessAction {
   items: TMoviePreview[];
+}
+
+export interface IListGenreMoviesSuccessAction {
+  action: TMoviePreview[];
+  comedy: TMoviePreview[];
+  horror: TMoviePreview[];
+  romance: TMoviePreview[];
+  documentary: TMoviePreview[];
 }
 
 export enum EMoviePlatform {

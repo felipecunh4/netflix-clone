@@ -55,13 +55,39 @@ export function* listTopRatedMovies() {
   }
 }
 
-export function* listGenresMovies(genre: EMovieKindRequest) {
+function* listMovieGenre(movieId: number) {
   try {
-    const response = yield* call(MovieRest.listGenres, 28);
+    const response = yield* call(MovieRest.listGenres, movieId);
 
-    const movies = MoviesTransformer.ApiListMoviesToApp(response);
+    const movie = MoviesTransformer.ApiListMovieGenreToApp(response);
 
-    yield* put(MoviesActions.listGenresMovies.success(movies));
+    return movie;
+  } catch (err) {
+    console.log(err);
+    throw new Error('Error to listMovieGenre');
+  }
+}
+
+export function* listAllGenresMovies() {
+  try {
+    const action = yield* call(listMovieGenre, EMovieKindRequest.ACTION);
+    const comedy = yield* call(listMovieGenre, EMovieKindRequest.COMEDY);
+    const horror = yield* call(listMovieGenre, EMovieKindRequest.HORROR);
+    const romance = yield* call(listMovieGenre, EMovieKindRequest.ROMANCE);
+    const documentary = yield* call(
+      listMovieGenre,
+      EMovieKindRequest.DOCUMENTARY
+    );
+
+    yield* put(
+      MoviesActions.listGenresMovies.success({
+        action,
+        comedy,
+        horror,
+        romance,
+        documentary,
+      })
+    );
   } catch (err) {
     console.log(err);
     yield* put(MoviesActions.listGenresMovies.failure());
@@ -115,10 +141,8 @@ export function* watchTopRatedMoviesList() {
 
 export function* watchGenresMoviesList() {
   while (true) {
-    const { payload } = yield* take<ListGenresMoviesAction>(
-      MoviesTypes.LIST_GENRES_MOVIES_REQUEST
-    );
-    yield* fork(listGenresMovies, payload.genre);
+    yield* take<ListGenresMoviesAction>(MoviesTypes.LIST_GENRES_MOVIES_REQUEST);
+    yield* fork(listAllGenresMovies);
   }
 }
 
