@@ -1,5 +1,6 @@
-import { IMovieList } from '../../services/types';
+import { TMoviePreview } from '../../store/ducks/movies/actions/types';
 
 export interface IMovieRowProps {
-  movieCategory: IMovieList;
+  items: TMoviePreview[];
+  movieCategory: string;
 }

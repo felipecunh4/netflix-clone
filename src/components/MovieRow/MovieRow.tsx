@@ -22,7 +22,7 @@ const MovieRow = (props: IMovieRowProps) => {
 
   const handleRightArrow = () => {
     let x = scrollX - Math.round(window.innerWidth / 2);
-    const listWidth = props.movieCategory.items.length * 200;
+    const listWidth = props.items.length * 200;
 
     if (window.innerWidth - listWidth > x) {
       x = window.innerWidth - listWidth - 60;
@@ -32,21 +32,21 @@ const MovieRow = (props: IMovieRowProps) => {
   };
 
   const renderImageRow = () =>
-    props.movieCategory.items.map((movie) => (
+    props.items.map((movie) => (
       <div key={movie.id} className={scss.item}>
         <Image
           width={300}
           height={450}
           className={scss.img}
-          alt={movie.original_title}
-          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+          alt={movie.title}
+          src={`https://image.tmdb.org/t/p/w300${movie.poster}`}
         />
       </div>
     ));
 
   return (
     <div className={scss.container}>
-      <h2 className={scss.title}>{props.movieCategory.title}</h2>
+      <h2 className={scss.title}>{props.movieCategory}</h2>
       <button type="button" className={scss.back} onClick={handleLeftArrow}>
         <Arrow className={scss.arrowLeft} />
       </button>
@@ -58,10 +58,10 @@ const MovieRow = (props: IMovieRowProps) => {
           className={scss.list}
           style={{
             marginLeft: scrollX,
-            width: `${props.movieCategory.items.length * 200}px`,
+            width: `${props.items.length * 200}px`,
           }}
         >
-          {props.movieCategory.items.length > 0 && renderImageRow()}
+          {props.items.length > 0 && renderImageRow()}
         </div>
       </div>
     </div>

@@ -1,16 +1,10 @@
-export interface IMovieList {
-  id: number;
-  title: string;
-  slug: string;
-  items: TMoviePreview[];
-}
-
-export type TMoviePreview = {
+export type TMovieRest = {
   adult: boolean;
   backdrop_path: string;
   genre_ids: number[];
   id: number;
   original_language: string;
+  original_name: string;
   original_title: string;
   overview: string;
   popularity: number;
@@ -22,7 +16,14 @@ export type TMoviePreview = {
   vote_count: number;
 };
 
-export type TMovieInfo = {
+export interface IMovieApiRest {
+  page: number;
+  results: TMovieRest[];
+  total_pages: number;
+  total_results: number;
+}
+
+export type TMovieInfoRest = {
   backdrop_path: string;
   episode_run_time: number[];
   first_air_date: string;
@@ -55,10 +56,3 @@ export type TMovieInfo = {
   tagline: string;
   vote_average: number;
 };
-
-export interface IMovieApiRest {
-  page: number;
-  results: TMoviePreview[];
-  total_pages: number;
-  total_results: number;
-}

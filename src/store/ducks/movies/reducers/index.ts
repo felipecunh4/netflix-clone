@@ -1,7 +1,13 @@
 import { combineReducers } from 'redux';
 
-import { moviesReducer as movies } from './movies';
+import { originalsReducer } from './originals';
+import { trendingReducer } from './trending';
+import { topRatedReducer } from './toprated';
+import { genresReducer } from './genres';
 
 export const moviesReducer = combineReducers({
-  movies,
+  originals: originalsReducer,
+  trending: trendingReducer,
+  topRated: topRatedReducer,
+  genres: genresReducer,
 });

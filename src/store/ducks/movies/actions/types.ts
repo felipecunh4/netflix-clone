@@ -1,16 +1,13 @@
+import { EMovieKindRequest } from '../types';
+
 export interface IListMoviesRequestAction {
-  genre: string;
+  genre: EMovieKindRequest;
 }
 
 export type TMoviePreview = {
   id: number;
-  originalTitle: string;
-  description: string;
-  poster: string;
-  banner: string;
-  date: string;
   title: string;
-  average: number;
+  poster: string;
 };
 
 export interface IListMoviesSuccessAction {
