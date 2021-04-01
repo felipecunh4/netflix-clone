@@ -1,4 +1,5 @@
 import { rest } from '..';
+import { EMoviePlatform } from '../../store/ducks/movies/actions/types';
 import { IMovieApiRest, TMovieInfoRest } from './types';
 
 export class MovieRest {
@@ -34,9 +35,11 @@ export class MovieRest {
     return data;
   };
 
-  static findMovieInfo = async (type: string, movieId: number) => {
+  static findMovieInfo = async (movieId: number, platform: EMoviePlatform) => {
+    console.log(movieId);
+    console.log(platform);
     const { data } = await rest.get<TMovieInfoRest>(
-      `/${type}/${movieId}?language=pt-Br&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
+      `/${platform}/${movieId}?language=pt-Br&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );
 
     return data;

@@ -1,5 +1,5 @@
-import { TMovieInfoRest } from '../../services/api/types';
+import { IFindMovieInfoSuccessAction } from '../../store/ducks/movies/actions/types';
 
 export interface IHighlightMovieProps {
-  movie: TMovieInfoRest;
+  movie: IFindMovieInfoSuccessAction;
 }

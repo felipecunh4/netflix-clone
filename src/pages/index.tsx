@@ -3,7 +3,7 @@ import { GetStaticProps } from 'next';
 import { useEffect, useState } from 'react';
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 
-import { EMovieTypes, movieTypes } from './types';
+import { EMovieTypes } from './types';
 import { SagaStore, wrapper } from '../store';
 import { RootState } from '../interfaces/rootState';
 import { EMovieKindRequest } from '../store/ducks/movies/types';
@@ -16,6 +16,7 @@ import MovieRow from '../components/MovieRow/MovieRow';
 import HighlightMovie from '../components/HighlightMovie/HighlightMovie';
 
 import scss from './index.module.scss';
+import { EMoviePlatform } from '../store/ducks/movies/actions/types';
 
 const useRootStore = () =>
   useSelector(
@@ -24,6 +25,7 @@ const useRootStore = () =>
       trending: state.movies.trending,
       topRated: state.movies.topRated,
       genres: state.movies.genres,
+      info: state.movies.info,
     }),
     shallowEqual
   );
@@ -34,19 +36,20 @@ const Home = () => {
 
   const [bgHeader, setBgHeader] = useState(false);
 
-  const loading =
-    store.originals.loading ||
-    store.trending.loading ||
-    store.topRated.loading ||
-    store.genres.loading;
-
   useEffect(() => {
-    const originals = store.originals.items;
-    const randomOriginal = Math.floor(Math.random() * originals.length);
-    const highlight = originals[randomOriginal];
+    if (store.originals.items.length > 0) {
+      const originals = store.originals.items;
+      const randomOriginal = Math.floor(Math.random() * originals.length);
+      const highlight = originals[randomOriginal];
 
-    // const highlightInfo = await getMovie(highlight.id, 'tv');
-  }, []);
+      dispatch(
+        MoviesActions.findMovieInfo.request({
+          movieId: highlight.id,
+          platform: EMoviePlatform.TV,
+        })
+      );
+    }
+  }, [store.originals, dispatch]);
 
   useEffect(() => {
     const scrollListener = () => {
@@ -64,25 +67,11 @@ const Home = () => {
     };
   }, []);
 
-  // const renderMovieList = () =>
-  //   movieTypes.map((type) => {
-  //     console.log(type.slug);
-  //     // console.log(store[type.slug]);
-
-  //     return (
-  //       <MovieRow
-  //         key={type.id}
-  //         movieCategory={type}
-  //         items={store.originals.items}
-  //       />
-  //     );
-  //   });
-
   return (
     <div className={scss.container}>
       <Header bgBlack={bgHeader} />
-      {loading && <Loading />}
-      {/* <HighlightMovie movie={highlightData} /> */}
+      <Loading load={store.info.loading} />
+      {!store.info.loading && <HighlightMovie movie={store.info} />}
       <section className={scss.lists}>
         <MovieRow
           movieCategory={EMovieTypes.ORIGINALS}
@@ -117,7 +106,7 @@ export const getStaticProps: GetStaticProps = wrapper.getStaticProps(
     await (store as SagaStore).sagaTask?.toPromise();
 
     return {
-      revalidate: 120,
+      revalidate: 60 * 6,
     };
   }
 );

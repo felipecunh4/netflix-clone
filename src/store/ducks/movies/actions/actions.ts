@@ -1,6 +1,11 @@
 import { createAsyncAction } from 'typesafe-actions';
 import { MoviesTypes } from '../types';
-import { IListMoviesRequestAction, IListMoviesSuccessAction } from './types';
+import {
+  IFindMovieInfoRequestAction,
+  IFindMovieInfoSuccessAction,
+  IListMoviesRequestAction,
+  IListMoviesSuccessAction,
+} from './types';
 
 export class MoviesActions {
   static readonly listOriginalsMovies = createAsyncAction(
@@ -40,5 +45,17 @@ export class MoviesActions {
       (res: IListMoviesSuccessAction) => res,
     ],
     MoviesTypes.LIST_GENRES_MOVIES_FAILURE
+  )();
+
+  static readonly findMovieInfo = createAsyncAction(
+    [
+      MoviesTypes.FIND_MOVIE_INFO_REQUEST,
+      (res: IFindMovieInfoRequestAction) => res,
+    ],
+    [
+      MoviesTypes.FIND_MOVIE_INFO_SUCCESS,
+      (res: IFindMovieInfoSuccessAction) => res,
+    ],
+    MoviesTypes.FIND_MOVIE_INFO_FAILURE
   )();
 }

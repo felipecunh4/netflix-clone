@@ -15,3 +15,7 @@ export type ListTopRatedMoviesAction = ReturnType<
 export type ListGenresMoviesAction = ReturnType<
   typeof MoviesActions.listGenresMovies.request
 >;
+
+export type FindMovieInfoAction = ReturnType<
+  typeof MoviesActions.findMovieInfo.request
+>;

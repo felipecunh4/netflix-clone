@@ -6,8 +6,10 @@ import {
   ListTrendingMoviesAction,
   ListTopRatedMoviesAction,
   ListGenresMoviesAction,
+  FindMovieInfoAction,
 } from './types';
 import { EMovieKindRequest, MoviesTypes } from '../types';
+import { EMoviePlatform } from '../actions/types';
 
 import { MoviesActions } from '../actions/actions';
 
@@ -66,6 +68,20 @@ export function* listGenresMovies(genre: EMovieKindRequest) {
   }
 }
 
+export function* findMovieInfo(movieId: number, platform: EMoviePlatform) {
+  try {
+    const response = yield* call(MovieRest.findMovieInfo, movieId, platform);
+    console.log('response', response);
+    const movieInfo = MoviesTransformer.ApiFindMovieInfoToApp(response);
+    console.log(movieInfo);
+
+    yield* put(MoviesActions.findMovieInfo.success(movieInfo));
+  } catch (err) {
+    console.log(err);
+    yield* put(MoviesActions.findMovieInfo.failure());
+  }
+}
+
 /**
  * WATCHERS
  */
@@ -106,11 +122,21 @@ export function* watchGenresMoviesList() {
   }
 }
 
+export function* watchMovieInfo() {
+  while (true) {
+    const { payload } = yield* take<FindMovieInfoAction>(
+      MoviesTypes.FIND_MOVIE_INFO_REQUEST
+    );
+    yield* fork(findMovieInfo, payload.movieId, payload.platform);
+  }
+}
+
 export function* moviesWatcher() {
   return yield all([
     fork(watchOriginalsMoviesList),
     fork(watchTrendingMoviesList),
     fork(watchTopRatedMoviesList),
     fork(watchGenresMoviesList),
+    fork(watchMovieInfo),
   ]);
 }
