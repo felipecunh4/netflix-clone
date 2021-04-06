@@ -1,4 +1,18 @@
+import { CallEffect } from 'redux-saga/effects';
+import { IMovieApiRest } from '../../../../services/api/types';
 import { MoviesActions } from '../actions/actions';
+import { EMovieTypes } from '../types';
+
+export type TMovieTypes = IMovieApiRest;
+
+export type TMovieSearchType = Record<
+  keyof typeof EMovieTypes,
+  (movieId: number) => Generator<CallEffect<TMovieTypes>, TMovieTypes>
+>;
+
+export type ListMoviesAction = ReturnType<
+  typeof MoviesActions.listMovies.request
+>;
 
 export type ListOriginalsMoviesAction = ReturnType<
   typeof MoviesActions.listOriginalsMovies.request

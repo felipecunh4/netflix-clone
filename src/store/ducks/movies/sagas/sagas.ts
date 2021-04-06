@@ -1,105 +1,37 @@
 /* eslint-disable no-console */
 import { put, fork, take, all, call } from 'typed-redux-saga';
 
-import {
-  ListOriginalsMoviesAction,
-  ListTrendingMoviesAction,
-  ListTopRatedMoviesAction,
-  ListGenresMoviesAction,
-  FindMovieInfoAction,
-} from './types';
-import { EMovieKindRequest, MoviesTypes } from '../types';
+import { FindMovieInfoAction, ListMoviesAction } from './types';
+import { EMovieKindRequest, MoviesTypes, EMovieTypes } from '../types';
 import { EMoviePlatform } from '../actions/types';
 
 import { MoviesActions } from '../actions/actions';
 
 import { MovieRest } from '../../../../services/api/index';
 import { MoviesTransformer } from '../../../../transformer/movies/movies';
+import { handleMovieSearch } from './data';
 
-export function* listOriginalsMovies() {
+export function* listMovies(
+  searchType: EMovieTypes,
+  genreId: EMovieKindRequest
+) {
   try {
-    const response = yield* call(MovieRest.listOriginals);
+    const response = yield* call(handleMovieSearch[searchType], genreId);
 
-    const movies = MoviesTransformer.ApiListMoviesToApp(response);
+    const movies = MoviesTransformer.ApiListMoviesToApp(response, searchType);
 
-    yield* put(MoviesActions.listOriginalsMovies.success(movies));
+    yield* put(MoviesActions.listMovies.success(movies));
   } catch (err) {
     console.log(err);
-    yield* put(MoviesActions.listOriginalsMovies.failure());
-  }
-}
-
-export function* listTrendingMovies() {
-  try {
-    const response = yield* call(MovieRest.listTrending);
-
-    const movies = MoviesTransformer.ApiListMoviesToApp(response);
-
-    yield* put(MoviesActions.listTrendingMovies.success(movies));
-  } catch (err) {
-    console.log(err);
-    yield* put(MoviesActions.listTrendingMovies.failure());
-  }
-}
-
-export function* listTopRatedMovies() {
-  try {
-    const response = yield* call(MovieRest.listTopRated);
-
-    const movies = MoviesTransformer.ApiListMoviesToApp(response);
-
-    yield* put(MoviesActions.listTopRatedMovies.success(movies));
-  } catch (err) {
-    console.log(err);
-    yield* put(MoviesActions.listTopRatedMovies.failure());
-  }
-}
-
-function* listMovieGenre(movieId: number) {
-  try {
-    const response = yield* call(MovieRest.listGenres, movieId);
-
-    const movie = MoviesTransformer.ApiListMovieGenreToApp(response);
-
-    return movie;
-  } catch (err) {
-    console.log(err);
-    throw new Error('Error to listMovieGenre');
-  }
-}
-
-export function* listAllGenresMovies() {
-  try {
-    const action = yield* call(listMovieGenre, EMovieKindRequest.ACTION);
-    const comedy = yield* call(listMovieGenre, EMovieKindRequest.COMEDY);
-    const horror = yield* call(listMovieGenre, EMovieKindRequest.HORROR);
-    const romance = yield* call(listMovieGenre, EMovieKindRequest.ROMANCE);
-    const documentary = yield* call(
-      listMovieGenre,
-      EMovieKindRequest.DOCUMENTARY
-    );
-
-    yield* put(
-      MoviesActions.listGenresMovies.success({
-        action,
-        comedy,
-        horror,
-        romance,
-        documentary,
-      })
-    );
-  } catch (err) {
-    console.log(err);
-    yield* put(MoviesActions.listGenresMovies.failure());
+    yield* put(MoviesActions.listMovies.failure());
   }
 }
 
 export function* findMovieInfo(movieId: number, platform: EMoviePlatform) {
   try {
     const response = yield* call(MovieRest.findMovieInfo, movieId, platform);
-    console.log('response', response);
+
     const movieInfo = MoviesTransformer.ApiFindMovieInfoToApp(response);
-    console.log(movieInfo);
 
     yield* put(MoviesActions.findMovieInfo.success(movieInfo));
   } catch (err) {
@@ -112,37 +44,12 @@ export function* findMovieInfo(movieId: number, platform: EMoviePlatform) {
  * WATCHERS
  */
 
-export function* watchOriginalsMoviesList() {
+export function* watchMoviesList() {
   while (true) {
-    yield* take<ListOriginalsMoviesAction>(
-      MoviesTypes.LIST_ORIGINALS_MOVIES_REQUEST
+    const { payload } = yield* take<ListMoviesAction>(
+      MoviesTypes.LIST_MOVIES_REQUEST
     );
-    yield* fork(listOriginalsMovies);
-  }
-}
-
-export function* watchTrendingMoviesList() {
-  while (true) {
-    yield* take<ListTrendingMoviesAction>(
-      MoviesTypes.LIST_TRENDING_MOVIES_REQUEST
-    );
-    yield* fork(listTrendingMovies);
-  }
-}
-
-export function* watchTopRatedMoviesList() {
-  while (true) {
-    yield* take<ListTopRatedMoviesAction>(
-      MoviesTypes.LIST_TOP_RATED_MOVIES_REQUEST
-    );
-    yield* fork(listTopRatedMovies);
-  }
-}
-
-export function* watchGenresMoviesList() {
-  while (true) {
-    yield* take<ListGenresMoviesAction>(MoviesTypes.LIST_GENRES_MOVIES_REQUEST);
-    yield* fork(listAllGenresMovies);
+    yield* fork(listMovies, payload.searchType, payload.genreId || 0);
   }
 }
 
@@ -156,11 +63,5 @@ export function* watchMovieInfo() {
 }
 
 export function* moviesWatcher() {
-  return yield all([
-    fork(watchOriginalsMoviesList),
-    fork(watchTrendingMoviesList),
-    fork(watchTopRatedMoviesList),
-    fork(watchGenresMoviesList),
-    fork(watchMovieInfo),
-  ]);
+  return yield all([fork(watchMoviesList), fork(watchMovieInfo)]);
 }

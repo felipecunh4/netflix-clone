@@ -5,7 +5,8 @@ import { IHighlightMovieProps } from './types';
 import scss from './HighlightMovie.module.scss';
 
 const HighlightMovie = (props: IHighlightMovieProps) => {
-  const dateAired = new Date(props.movie.date);
+  const dateAired =
+    props.movie.date && new Date(props.movie.date).getFullYear();
   let description = props.movie.description;
   description =
     description.length > 200
@@ -28,7 +29,7 @@ const HighlightMovie = (props: IHighlightMovieProps) => {
         <h2 className={scss.title}>{props.movie.title}</h2>
         <div className={scss.info}>
           <div className={scss.points}>{props.movie.average} pontos</div>
-          <div className={scss.date}>{dateAired.getFullYear()}</div>
+          <div className={scss.date}>{dateAired}</div>
           <div className={scss.seasons}>
             {props.movie.totalSeasons} temporada
             <span>{props.movie.totalSeasons !== 1 && 's'}</span>

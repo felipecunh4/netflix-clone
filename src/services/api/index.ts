@@ -36,8 +36,6 @@ export class MovieRest {
   };
 
   static findMovieInfo = async (movieId: number, platform: EMoviePlatform) => {
-    console.log(movieId);
-    console.log(platform);
     const { data } = await rest.get<TMovieInfoRest>(
       `/${platform}/${movieId}?language=pt-Br&api_key=${process.env.NEXT_PUBLIC_API_KEY}`
     );

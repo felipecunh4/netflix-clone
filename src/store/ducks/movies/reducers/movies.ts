@@ -9,21 +9,19 @@ export const INITIAL_STATE: IMoviesState = {
   items: [],
 };
 
-export const originalsReducer = createReducer<IMoviesState, Action>(
-  INITIAL_STATE
-)
-  .handleAction(MoviesActions.listOriginalsMovies.request, (store) => ({
+export const moviesReducer = createReducer<IMoviesState, Action>(INITIAL_STATE)
+  .handleAction(MoviesActions.listMovies.request, (store) => ({
     ...store,
     error: false,
     loading: true,
   }))
-  .handleAction(MoviesActions.listOriginalsMovies.success, (store, action) => ({
+  .handleAction(MoviesActions.listMovies.success, (store, action) => ({
     ...store,
     error: false,
     loading: false,
-    items: action.payload.items,
+    items: [...store.items, ...action.payload.items],
   }))
-  .handleAction(MoviesActions.listOriginalsMovies.failure, (store) => ({
+  .handleAction(MoviesActions.listMovies.failure, (store) => ({
     ...store,
     error: true,
     loading: false,

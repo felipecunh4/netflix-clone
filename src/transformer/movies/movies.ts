@@ -3,14 +3,15 @@ import {
   TMovieInfoRest,
   TMovieRest,
 } from '../../services/api/types';
-import { IFindMovieInfoSuccessAction } from '../../store/ducks/movies/actions/types';
 import {
+  IFindMovieInfoSuccessAction,
   IListMoviesSuccessAction,
   TMoviePreview,
 } from '../../store/ducks/movies/actions/types';
+import { EMovieTypes, movieTypeData } from '../../store/ducks/movies/types';
 
 export class MoviesTransformer {
-  static ApiToApp(movie: TMovieRest): TMoviePreview {
+  static ApiToApp(movie: TMovieRest, movieType: EMovieTypes): TMoviePreview {
     try {
       const id: TMoviePreview['id'] = movie.id;
       const title: TMoviePreview['title'] = movie.original_name
@@ -18,10 +19,16 @@ export class MoviesTransformer {
         : movie.original_title;
       const poster: TMoviePreview['poster'] = movie.poster_path;
 
+      const typeFiltered = movieTypeData.filter(
+        (type) => type.kind === movieType
+      )[0];
+      const type: TMoviePreview['type'] = typeFiltered.title;
+
       return {
         id,
         poster,
         title,
+        type,
       };
     } catch (err) {
       console.log(err);
@@ -29,9 +36,14 @@ export class MoviesTransformer {
     }
   }
 
-  static ApiListMoviesToApp(movies: IMovieApiRest): IListMoviesSuccessAction {
+  static ApiListMoviesToApp(
+    movies: IMovieApiRest,
+    movieType: EMovieTypes
+  ): IListMoviesSuccessAction {
     try {
-      const items = movies.results.map((movie) => this.ApiToApp(movie));
+      const items = movies.results.map((movie) =>
+        this.ApiToApp(movie, movieType)
+      );
 
       return { items };
     } catch (err) {
@@ -67,9 +79,5 @@ export class MoviesTransformer {
       console.log(err);
       throw new Error('Transformer failed to parse `TMovieInfoRest` error.');
     }
-  }
-
-  static ApiListMovieGenreToApp(movies: IMovieApiRest): TMoviePreview[] {
-    return movies.results.map((movie) => this.ApiToApp(movie));
   }
 }
